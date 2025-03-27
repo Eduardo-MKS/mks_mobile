@@ -41,6 +41,20 @@ const stations = [
     latitude: -26.961292,
     longitude: -49.372902,
   },
+  {
+    id: 6,
+    title: "Rio do Campo",
+    description: "SDC-SC Rio do Campo",
+    latitude: -26.895851,
+    longitude: -50.15508,
+  },
+  {
+    id: 7,
+    title: "Itaiópolis",
+    description: "SDC-SC Itaiópolis",
+    latitude: -26.571453,
+    longitude: -49.822426,
+  },
 ];
 
 export default function HomeScreen({ route }) {
