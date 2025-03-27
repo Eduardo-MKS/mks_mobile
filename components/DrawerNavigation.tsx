@@ -3,7 +3,6 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   View,
   Text,
-  Switch,
   StyleSheet,
   Image,
   FlatList,
@@ -12,6 +11,7 @@ import {
 } from "react-native";
 import { Input } from "react-native-elements";
 import HomeScreen from "../screens/HomeScreen";
+import Slider from "@react-native-community/slider";
 
 const Drawer = createDrawerNavigator();
 
@@ -54,32 +54,10 @@ const stations = [
 ];
 
 export function MyDrawer() {
-  const [filterActive, setFilterActive] = useState(false);
   const [searchText, setSearchText] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
-  const [openProvedor, setOpenProvedor] = useState(false);
-
-  const [provedores, setProvedores] = useState([
-    {
-      label: "Dc Blumenau",
-      value: "Dc Blumenau",
-    },
-    {
-      label: "Dc Gaspar",
-      value: "Dc Gaspar",
-    },
-    {
-      label: "Dc Ilhota",
-      value: "Dc Ilhota",
-    },
-    {
-      label: "Dc Brusque",
-      value: "Dc Brusque",
-    },
-  ]);
-
-  const toggleSwitch = () => setFilterActive(!filterActive);
+  const [opacity, setOpacity] = useState(1);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -96,9 +74,7 @@ export function MyDrawer() {
   };
 
   const applySelection = (navigation) => {
-    if (selectedStation) {
-      navigation.navigate("HomeScreen", { selectedStation });
-    }
+    navigation.navigate("HomeScreen", { selectedStation, opacity });
   };
 
   const removeSelection = () => {
@@ -118,7 +94,6 @@ export function MyDrawer() {
               value={searchText}
               onChangeText={handleSearch}
             />
-
             {searchText.length > 0 && (
               <FlatList
                 data={suggestions}
@@ -131,7 +106,16 @@ export function MyDrawer() {
               />
             )}
           </View>
-
+          <View style={styles.opacityContainer}>
+            <Text>Opacidade: {Math.round(opacity * 100)}%</Text>
+            <Slider
+              value={opacity}
+              onValueChange={setOpacity}
+              minimumValue={0}
+              maximumValue={1}
+              step={0.01}
+            />
+          </View>
           <View style={styles.footerContainer}>
             <View style={styles.buttonContainer}>
               <Button
@@ -140,7 +124,6 @@ export function MyDrawer() {
               />
               <Button title="Remover" onPress={removeSelection} />
             </View>
-
             <View style={styles.drawerFooter}>
               <Image
                 source={require("../assets/logoazul.png")}
@@ -155,55 +138,27 @@ export function MyDrawer() {
       <Drawer.Screen
         name="HomeScreen"
         component={HomeScreen}
-        initialParams={{ selectedStation: null }}
+        initialParams={{ selectedStation: null, opacity: 1 }}
       />
     </Drawer.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
-  drawerContent: {
-    flex: 1,
-    padding: 16,
-    justifyContent: "center", // Centraliza verticalmente
-  },
-  contentContainer: {
-    marginBottom: 20,
-  },
-  footerContainer: {
-    marginBottom: 20,
-  },
+  drawerContent: { flex: 1, padding: 16, justifyContent: "center" },
+  contentContainer: { marginBottom: 20 },
+  footerContainer: { marginBottom: 20 },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 10,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 16,
-  },
-  filterOption: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 20,
-  },
-  drawerFooter: {
-    alignItems: "center",
-  },
-  profilePhotoContainer: {
-    alignItems: "center",
-  },
-  profilePhoto: {
-    width: 200,
-    height: 100,
-    borderRadius: 50,
-    marginBottom: 20,
-  },
+  drawerFooter: { alignItems: "center" },
+  profilePhoto: { width: 200, height: 100, borderRadius: 50, marginBottom: 20 },
   suggestionItem: {
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
+  opacityContainer: { marginBottom: 20 },
 });

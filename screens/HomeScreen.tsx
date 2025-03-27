@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image } from "react-native";
-import MapView, { Marker, PROVIDER_DEFAULT } from "react-native-maps";
+import MapView, { Marker, PROVIDER_DEFAULT, UrlTile } from "react-native-maps";
+
+const RAINVIEWER_API = "https://tilecache.rainviewer.com/v2/radar/";
+const TILE_FORMAT = "/256/{z}/{x}/{y}/2/1_1.png";
 
 const stations = [
   {
@@ -41,13 +44,14 @@ const stations = [
 ];
 
 export default function HomeScreen({ route }) {
-  const { selectedStation } = route.params;
+  const { selectedStation, opacity } = route.params || {};
   const [region, setRegion] = useState({
     latitude: -27.2423,
     longitude: -50.2189,
     latitudeDelta: 3.5,
     longitudeDelta: 3.5,
   });
+  const [rainLayer, setRainLayer] = useState(null);
 
   useEffect(() => {
     if (selectedStation) {
@@ -59,6 +63,22 @@ export default function HomeScreen({ route }) {
       });
     }
   }, [selectedStation]);
+
+  useEffect(() => {
+    const fetchRainViewer = async () => {
+      try {
+        const response = await fetch(
+          "https://api.rainviewer.com/public/maps.json"
+        );
+        const data = await response.json();
+        const latestFrame = data.at(-1); // Última imagem disponível
+        setRainLayer(`${RAINVIEWER_API}${latestFrame}${TILE_FORMAT}`);
+      } catch (error) {
+        console.error("Erro ao buscar dados do RainViewer:", error);
+      }
+    };
+    fetchRainViewer();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -85,6 +105,13 @@ export default function HomeScreen({ route }) {
             />
           </Marker>
         ))}
+        {rainLayer && (
+          <UrlTile
+            urlTemplate={rainLayer}
+            zIndex={1}
+            opacity={opacity || 0.5}
+          />
+        )}
       </MapView>
     </View>
   );
