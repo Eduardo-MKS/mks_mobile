@@ -6,10 +6,10 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Platform } from "react-native";
-import Papa from "papaparse";
+//import { Platform } from "react-native";
+//import Papa from "papaparse";
 import { DataTable } from "react-native-paper";
-import * as FileSystem from "expo-file-system";
+//import * as FileSystem from "expo-file-system";
 
 export default function AlarmesScreen() {
   const tableData = [

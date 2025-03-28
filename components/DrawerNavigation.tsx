@@ -12,6 +12,7 @@ import {
 import { Input } from "react-native-elements";
 import HomeScreen from "../screens/HomeScreen";
 import Slider from "@react-native-community/slider";
+import DropDownPicker from "react-native-dropdown-picker";
 
 const Drawer = createDrawerNavigator();
 
@@ -72,6 +73,8 @@ export function MyDrawer() {
   const [suggestions, setSuggestions] = useState([]);
   const [selectedStation, setSelectedStation] = useState(null);
   const [opacity, setOpacity] = useState(1);
+  const [openParametro, setOpenParametro] = useState(false);
+  const [selectedParametro, setSelectedParametro] = useState(null);
 
   const handleSearch = (text) => {
     setSearchText(text);
@@ -80,6 +83,14 @@ export function MyDrawer() {
     );
     setSuggestions(filteredStations);
   };
+
+  const [parametros, setParametros] = useState([
+    { label: "Chuva Acumulada (mm)", value: "Chuva Acumulada (mm)" },
+    { label: "Chuva Instantanea (mm)", value: "Chuva Instantanea (mm)" },
+    { label: "Chuva Deslizamento (mm)", value: "Chuva Deslizamento (mm)" },
+    { label: "Rio m", value: "Rio m" },
+    { label: "Temperatura", value: "Temperatura" },
+  ]);
 
   const selectStation = (station) => {
     setSelectedStation(station);
@@ -91,10 +102,19 @@ export function MyDrawer() {
     navigation.navigate("HomeScreen", { selectedStation, opacity });
   };
 
+  const [valoresPreDefinidos, setValoresPreDefinidos] = useState([
+    { label: "Chuva Acumulada (mm)", value: "12,5 mm" },
+    { label: "Chuva Instantanea (mm)", value: "15,5 mm" },
+    { label: "Chuva Deslizamento (mm)", value: "2,5 mm" },
+    { label: "Rio m", value: "8,2 m" },
+    { label: "Temperatura", value: "25 C°" },
+  ]);
+
   const removeSelection = () => {
     setSelectedStation(null);
     setSearchText("");
     setSuggestions([]);
+    setSelectedParametro(null);
   };
 
   return (
@@ -119,6 +139,37 @@ export function MyDrawer() {
                 )}
               />
             )}
+          </View>
+          <View style={styles.dropInfos}>
+            <DropDownPicker
+              open={openParametro}
+              value={selectedParametro}
+              items={parametros}
+              setOpen={setOpenParametro}
+              setValue={setSelectedParametro}
+              setItems={setParametros}
+              closeAfterSelecting={true}
+              placeholder="Parâmetro"
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              zIndex={1000}
+              onChangeValue={(value) => {
+                const preDefinido = valoresPreDefinidos.find(
+                  (item) => item.label === value
+                );
+                console.log(preDefinido);
+              }}
+            />
+            <Input
+              value={
+                valoresPreDefinidos.find(
+                  (item) => item.label === selectedParametro
+                )?.value
+              }
+              clearButtonMode="always"
+              placeholder="Parâmetro"
+              style={styles.input}
+            ></Input>
           </View>
           <View style={styles.opacityContainer}>
             <Text>Opacidade: {Math.round(opacity * 100)}%</Text>
@@ -175,4 +226,31 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ccc",
   },
   opacityContainer: { marginBottom: 20 },
+  dropInfos: {
+    alignItems: "center",
+    marginBottom: 10,
+    backgroundColor: "#143D60",
+    padding: 10,
+    borderRadius: 8,
+    width: "100%", // Garante que os dropdowns ocupem toda a largura disponível
+    height: 180,
+  },
+  dropdown: {
+    marginBottom: 16,
+    borderColor: "#ccc",
+    width: "100%", // Garante que os dropdowns ocupem toda a largura disponível
+  },
+  dropdownContainer: {
+    width: "100%", // Garante que o container do dropdown ocupe toda a largura disponível
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#fff",
+    color: "#fff",
+    fontStyle: "italic",
+    borderRadius: 5,
+    padding: 10,
+    marginTop: 5,
+    width: "100%",
+  },
 });
