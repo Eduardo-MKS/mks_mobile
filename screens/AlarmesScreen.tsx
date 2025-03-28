@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "#fff",
   },
+
   downloadButtonsContainer: {
     flexDirection: "row",
     justifyContent: "center",

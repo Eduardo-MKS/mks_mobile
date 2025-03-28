@@ -23,7 +23,7 @@ export default function MainNavigator() {
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => {
             let iconName;
-            if (route.name === "Home") iconName = "home";
+            if (route.name === "Home") iconName = "map";
             else if (route.name === "Meus Dados") iconName = "person";
             else if (route.name === "Alarmes") iconName = "notifications";
             return <Ionicons name={iconName} size={size} color={color} />;
