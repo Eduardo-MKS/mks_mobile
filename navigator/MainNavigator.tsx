@@ -16,11 +16,11 @@ export default function MainNavigator() {
       <Tab.Navigator
         id="main-tab-navigator"
         screenOptions={({ route }) => ({
-          headerStyle: { backgroundColor: "#000" },
+          headerStyle: { backgroundColor: "#fff" },
           headerTintColor: "#000",
-          tabBarStyle: { backgroundColor: "#000" },
-          tabBarActiveTintColor: "#fff",
-          tabBarInactiveTintColor: "#fff",
+          tabBarStyle: { backgroundColor: "#fff" },
+          tabBarActiveTintColor: "#27548A",
+          tabBarInactiveTintColor: "#183B4E",
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => {
             let iconName;

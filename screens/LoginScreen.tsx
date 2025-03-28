@@ -91,7 +91,7 @@ export default function LoginScreen({ onLoginSuccess }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#000",
+    backgroundColor: "#F5EEDC",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -108,20 +108,21 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     borderBottomWidth: 1,
-    borderBottomColor: "#fff",
+    borderBottomColor: "#608BC1",
     width: "90%",
     marginBottom: 15,
   },
   icon: {
     marginRight: 10,
+    color: "#608BC1",
   },
   input: {
     flex: 1,
     height: 40,
-    color: "#fff",
+    color: "#608BC1",
   },
   forgotPasswordText: {
-    color: "#7FC7D9",
+    color: "#608BC1",
     marginTop: 5,
     textDecorationLine: "underline",
   },
@@ -134,11 +135,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonText: {
-    color: "#fff",
+    color: "#F5EEDC",
     fontWeight: "bold",
   },
   orText: {
-    color: "#fff",
+    color: "#608BC1",
     marginTop: 20,
   },
   socialButtonsContainer: {

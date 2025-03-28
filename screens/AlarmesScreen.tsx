@@ -1,4 +1,5 @@
 import {
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -6,10 +7,11 @@ import {
   View,
 } from "react-native";
 import React from "react";
-//import { Platform } from "react-native";
-//import Papa from "papaparse";
+import { Platform } from "react-native";
+import Papa from "papaparse";
 import { DataTable } from "react-native-paper";
-//import * as FileSystem from "expo-file-system";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
 
 export default function AlarmesScreen() {
   const tableData = [
@@ -99,7 +101,7 @@ export default function AlarmesScreen() {
     },
   ];
 
-  /* const handleDownload = async () => {
+  const handleDownload = async () => {
     try {
       const csv = Papa.unparse(tableData);
       const filename = FileSystem.documentDirectory + "dados.csv";
@@ -109,15 +111,8 @@ export default function AlarmesScreen() {
 
       // Abra o arquivo usando o aplicativo padrão do sistema (Android) ou compartilhe (iOS)
       if (Platform.OS === "android") {
-        if (FileSystem.openUriAsync) {
-          await FileSystem.getContentUriAsync(filename).then((contentUri) => {
-            FileSystem.openUriAsync(contentUri);
-          });
-        } else {
-          console.warn(
-            "FileSystem.openUriAsync não está disponível nesta versão."
-          );
-        }
+        const contentUri = await FileSystem.getContentUriAsync(filename);
+        await Linking.openURL(contentUri);
       } else if (Platform.OS === "ios") {
         await Sharing.shareAsync(filename, {
           mimeType: "text/csv",
@@ -127,7 +122,7 @@ export default function AlarmesScreen() {
     } catch (error) {
       console.error("Erro ao baixar o arquivo:", error);
     }
-*/
+  };
   const getRowStyle = (msg: string) => {
     if (msg.toLowerCase().includes("alto")) {
       return { backgroundColor: "red" }; // Cor de fundo vermelha para alerta alto
@@ -162,10 +157,9 @@ export default function AlarmesScreen() {
         </DataTable>
         <View style={styles.downloadButtonsContainer}>
           <TouchableOpacity style={styles.downloadButton}>
-            <Text style={styles.downloadButtonText}>Download CSV</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.downloadButton}>
-            <Text style={styles.downloadButtonText}>Download XLSX</Text>
+            <Text style={styles.downloadButtonText} onPress={handleDownload}>
+              Download
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -177,7 +171,7 @@ const styles = StyleSheet.create({
   tableContainer: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#fff",
+    backgroundColor: "#183B4E",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -186,10 +180,12 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
   },
   tableHeader: {
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#183B4E",
   },
   tableHeaderTitle: {
     fontStyle: "italic",
+    fontWeight: "bold",
+    color: "#fff",
   },
   downloadButtonsContainer: {
     flexDirection: "row",
@@ -197,7 +193,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   downloadButton: {
-    backgroundColor: "#143D60",
+    backgroundColor: "#DDA853",
     fontSize: 16,
     padding: 14,
     borderRadius: 8,
@@ -208,7 +204,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   downloadButtonText: {
-    color: "white",
+    color: "#183B4E",
     fontSize: 16,
   },
 });

@@ -127,6 +127,7 @@ export function MyDrawer() {
               placeholder="Buscar Estação"
               value={searchText}
               onChangeText={handleSearch}
+              style={styles.searchInput}
             />
             {searchText.length > 0 && (
               <FlatList
@@ -172,7 +173,9 @@ export function MyDrawer() {
             ></Input>
           </View>
           <View style={styles.opacityContainer}>
-            <Text>Opacidade: {Math.round(opacity * 100)}%</Text>
+            <Text style={styles.opacityText}>
+              Opacidade: {Math.round(opacity * 100)}%
+            </Text>
             <Slider
               value={opacity}
               onValueChange={setOpacity}
@@ -181,21 +184,26 @@ export function MyDrawer() {
               step={0.01}
             />
           </View>
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              onPress={() => applySelection(navigation)}
+              style={styles.buttonAplicar}
+            >
+              <Text style={styles.buttonTextAplicar}>APLICAR</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonLimpar}
+              onPress={removeSelection}
+            >
+              <Text style={styles.buttonTextLimpar}>LIMPAR</Text>
+            </TouchableOpacity>
+          </View>
           <View style={styles.footerContainer}>
-            <View style={styles.buttonContainer}>
-              <Button
-                title="Aplicar"
-                onPress={() => applySelection(navigation)}
-              />
-              <Button title="Remover" onPress={removeSelection} />
-            </View>
-            <View style={styles.drawerFooter}>
-              <Image
-                source={require("../assets/logoazul.png")}
-                style={styles.profilePhoto}
-              />
-              <Text>Desenvolvido por Mks</Text>
-            </View>
+            <Image
+              source={require("../assets/logoazul.png")}
+              style={styles.profilePhoto}
+            />
+            <Text style={styles.textFooter}>Desenvolvido por Mks</Text>
           </View>
         </View>
       )}
@@ -204,53 +212,92 @@ export function MyDrawer() {
         name="HomeScreen"
         component={HomeScreen}
         initialParams={{ selectedStation: null, opacity: 1 }}
+        options={{
+          headerBackground: () => (
+            <View style={{ backgroundColor: "#143D60" }} />
+          ),
+        }}
       />
     </Drawer.Navigator>
   );
 }
 
 const styles = StyleSheet.create({
-  drawerContent: { flex: 1, padding: 16, justifyContent: "center" },
+  drawerContent: {
+    flex: 1,
+    padding: 16,
+    justifyContent: "center",
+    backgroundColor: "#143D60",
+  },
   contentContainer: { marginBottom: 20 },
-  footerContainer: { marginBottom: 20 },
+  footerContainer: { marginBottom: 5, alignItems: "center" },
   buttonContainer: {
     flexDirection: "row",
     justifyContent: "space-around",
     marginBottom: 10,
+    color: "#fff",
+    backgroundColor: "#143D60",
+  },
+  searchInput: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
+    color: "#fff",
   },
   drawerFooter: { alignItems: "center" },
   profilePhoto: { width: 200, height: 100, borderRadius: 50, marginBottom: 20 },
   suggestionItem: {
     padding: 10,
     borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
+    borderBottomColor: "#fff",
   },
-  opacityContainer: { marginBottom: 20 },
+  opacityContainer: {
+    marginBottom: 20,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 8,
+  },
+  buttonTextAplicar: { color: "#fff", textAlign: "center", fontSize: 16 },
+  opacityText: { color: "#000" },
   dropInfos: {
     alignItems: "center",
     marginBottom: 10,
-    backgroundColor: "#143D60",
+    backgroundColor: "#fff",
     padding: 10,
     borderRadius: 8,
-    width: "100%", // Garante que os dropdowns ocupem toda a largura disponível
+    width: "100%",
     height: 180,
   },
   dropdown: {
     marginBottom: 16,
     borderColor: "#ccc",
-    width: "100%", // Garante que os dropdowns ocupem toda a largura disponível
+    width: "100%",
   },
   dropdownContainer: {
-    width: "100%", // Garante que o container do dropdown ocupe toda a largura disponível
+    width: "100%",
   },
   input: {
     borderWidth: 1,
-    borderColor: "#fff",
-    color: "#fff",
+    borderColor: "#000",
+    color: "#000",
     fontStyle: "italic",
     borderRadius: 5,
     padding: 10,
     marginTop: 5,
     width: "100%",
   },
+
+  buttonAplicar: {
+    backgroundColor: "#DDA853",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonLimpar: {
+    backgroundColor: "#DDA853",
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonTextLimpar: { color: "#fff", textAlign: "center", fontSize: 16 },
+  textFooter: { color: "#fff" },
 });

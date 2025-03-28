@@ -47,7 +47,7 @@ export default function MeusDadosScreen() {
           <Text style={styles.buttonText}>Configurações</Text>
         </TouchableOpacity>
         <TouchableOpacity style={[styles.button, styles.logoutButton]}>
-          <Text style={styles.buttonText}>Sair</Text>
+          <Text style={styles.buttonTextSair}>Sair</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -60,10 +60,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#000",
+    backgroundColor: "#183B4E",
   },
   profilePhotoContainer: {
-    shadowColor: "#000",
+    shadowColor: "#DDA853",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -75,12 +75,12 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 75,
     borderWidth: 2,
-    borderColor: "white",
+    borderColor: "#DDA853",
   },
   hr: {
     width: "80%",
     height: 1,
-    backgroundColor: "#143D60",
+    backgroundColor: "#DDA853",
     marginVertical: 20,
   },
   infoContainer: {
@@ -90,16 +90,16 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "#555",
+    color: "#DDA853",
   },
   textEmail: {
     fontSize: 18,
-    color: "#555",
+    color: "#F5EEDC",
     marginBottom: 5,
   },
   textPhone: {
     fontSize: 18,
-    color: "#555",
+    color: "#DDA853",
   },
   notFound: {
     fontSize: 18,
@@ -111,7 +111,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    backgroundColor: "#007bff",
+    backgroundColor: "#133E87",
     padding: 12,
     borderRadius: 8,
     width: "80%",
@@ -124,6 +124,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   logoutButton: {
-    backgroundColor: "#143D60",
+    backgroundColor: "#F3F3E0",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  buttonTextSair: {
+    color: "#133E87",
+    fontSize: 16,
+    fontWeight: "bold",
   },
 });
