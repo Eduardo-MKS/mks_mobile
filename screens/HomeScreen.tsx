@@ -46,7 +46,7 @@ export default function HomeScreen({ route }) {
           "https://api.rainviewer.com/public/maps.json"
         );
         const data = await response.json();
-        const latestFrame = data.at(-1); // Última imagem disponível
+        const latestFrame = data.at(-1);
         setRainLayer(`${RAINVIEWER_API}${latestFrame}${TILE_FORMAT}`);
       } catch (error) {
         console.error("Erro ao buscar dados do RainViewer:", error);
@@ -59,12 +59,10 @@ export default function HomeScreen({ route }) {
     const fetchStations = async () => {
       try {
         const response = await axios.get(ESTACOES_API);
-        const stationsData = response.data.data; // Pegando os dados corretamente
-
-        // Convertendo o objeto de estações em um array
+        const stationsData = response.data.data;
         const stationsArray: Station[] = Object.keys(stationsData).map(
           (key) => ({
-            id: key, // Usando a chave como ID
+            id: key,
             nome: stationsData[key].nome,
             latitude: stationsData[key].latitude,
             longitude: stationsData[key].longitude,

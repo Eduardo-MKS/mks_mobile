@@ -17,7 +17,6 @@ export default function MeusDadosScreen() {
     },
   ];
 
-  // Filtrar o array para obter o usuário com id igual a 1
   const usuarioId1 = usuarios.find((usuario) => usuario.id === 1);
 
   return (

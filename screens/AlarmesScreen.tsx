@@ -109,7 +109,6 @@ export default function AlarmesScreen() {
         encoding: FileSystem.EncodingType.UTF8,
       });
 
-      // Abra o arquivo usando o aplicativo padrão do sistema (Android) ou compartilhe (iOS)
       if (Platform.OS === "android") {
         const contentUri = await FileSystem.getContentUriAsync(filename);
         await Linking.openURL(contentUri);
@@ -125,13 +124,13 @@ export default function AlarmesScreen() {
   };
   const getRowStyle = (msg: string) => {
     if (msg.toLowerCase().includes("alto")) {
-      return { backgroundColor: "red" }; // Cor de fundo vermelha para alerta alto
+      return { backgroundColor: "red" };
     } else if (msg.toLowerCase().includes("médio")) {
-      return { backgroundColor: "yellow" }; // Cor de fundo amarela para alerta médio
+      return { backgroundColor: "yellow" };
     } else if (msg.toLowerCase().includes("baixo")) {
-      return { backgroundColor: "lightgreen" }; // Cor de fundo verde claro para alerta baixo
+      return { backgroundColor: "lightgreen" };
     } else {
-      return {}; // Sem cor de fundo padrão
+      return {};
     }
   };
 

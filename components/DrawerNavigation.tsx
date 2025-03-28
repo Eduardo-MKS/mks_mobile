@@ -50,7 +50,6 @@ export function MyDrawer() {
     fetchStations();
   }, []);
 
-  // Filtro da barra de busca
   const handleSearch = (text) => {
     setSearchText(text);
     const filteredStations = stations.filter((station) =>
