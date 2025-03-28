@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import {
   View,
@@ -7,66 +7,15 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  Button,
 } from "react-native";
 import { Input } from "react-native-elements";
 import HomeScreen from "../screens/HomeScreen";
 import Slider from "@react-native-community/slider";
-import DropDownPicker from "react-native-dropdown-picker";
+//import DropDownPicker from "react-native-dropdown-picker";
+import axios from "axios";
 
 const Drawer = createDrawerNavigator();
-
-const stations = [
-  {
-    id: 1,
-    title: "Blumenau",
-    description: "SDC-SC Blumenau.",
-    latitude: -26.922445,
-    longitude: -49.13543,
-  },
-  {
-    id: 2,
-    title: "Gaspar",
-    description: "SDC-SC Gaspar",
-    latitude: -26.926407,
-    longitude: -48.964283,
-  },
-  {
-    id: 3,
-    title: "Ilhota",
-    description: "SDC-SC Ilhota",
-    latitude: -26.894432,
-    longitude: -48.82478,
-  },
-  {
-    id: 4,
-    title: "Brusque",
-    description: "SDC-SC Brusque",
-    latitude: -27.100677,
-    longitude: -48.917225,
-  },
-  {
-    id: 5,
-    title: "Ascurra",
-    description: "SDC- SC Ascurra",
-    latitude: -26.961292,
-    longitude: -49.372902,
-  },
-  {
-    id: 6,
-    title: "Rio do Campo",
-    description: "SDC-SC Rio do Campo",
-    latitude: -26.895851,
-    longitude: -50.15508,
-  },
-  {
-    id: 7,
-    title: "Itaiópolis",
-    description: "SDC-SC Itaiópolis",
-    latitude: -26.571453,
-    longitude: -49.822426,
-  },
-];
+const ESTACOES_API = "https://api-dcsc.mks-unifique.ddns.net/api/estacoes";
 
 export function MyDrawer() {
   const [searchText, setSearchText] = useState("");
@@ -75,7 +24,33 @@ export function MyDrawer() {
   const [opacity, setOpacity] = useState(1);
   const [openParametro, setOpenParametro] = useState(false);
   const [selectedParametro, setSelectedParametro] = useState(null);
+  const [stations, setStations] = useState([]);
 
+  // Busca as estações da API
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const response = await axios.get(ESTACOES_API);
+        const stationsData = response.data.data;
+
+        const stationsArray = Object.keys(stationsData).map((key) => ({
+          id: key, // Usando a chave como ID
+          title: stationsData[key].nome,
+          latitude: stationsData[key].latitude,
+          longitude: stationsData[key].longitude,
+          description: stationsData[key].rio || "Sem descrição",
+        }));
+
+        setStations(stationsArray);
+      } catch (error) {
+        console.error("Erro ao buscar estações:", error);
+        setStations([]);
+      }
+    };
+    fetchStations();
+  }, []);
+
+  // Filtro da barra de busca
   const handleSearch = (text) => {
     setSearchText(text);
     const filteredStations = stations.filter((station) =>
@@ -83,14 +58,6 @@ export function MyDrawer() {
     );
     setSuggestions(filteredStations);
   };
-
-  const [parametros, setParametros] = useState([
-    { label: "Chuva Acumulada (mm)", value: "Chuva Acumulada (mm)" },
-    { label: "Chuva Instantanea (mm)", value: "Chuva Instantanea (mm)" },
-    { label: "Chuva Deslizamento (mm)", value: "Chuva Deslizamento (mm)" },
-    { label: "Rio m", value: "Rio m" },
-    { label: "Temperatura", value: "Temperatura" },
-  ]);
 
   const selectStation = (station) => {
     setSelectedStation(station);
@@ -101,14 +68,6 @@ export function MyDrawer() {
   const applySelection = (navigation) => {
     navigation.navigate("HomeScreen", { selectedStation, opacity });
   };
-
-  const [valoresPreDefinidos, setValoresPreDefinidos] = useState([
-    { label: "Chuva Acumulada (mm)", value: "12,5 mm" },
-    { label: "Chuva Instantanea (mm)", value: "15,5 mm" },
-    { label: "Chuva Deslizamento (mm)", value: "2,5 mm" },
-    { label: "Rio m", value: "8,2 m" },
-    { label: "Temperatura", value: "25 C°" },
-  ]);
 
   const removeSelection = () => {
     setSelectedStation(null);
@@ -132,7 +91,7 @@ export function MyDrawer() {
             {searchText.length > 0 && (
               <FlatList
                 data={suggestions}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => selectStation(item)}>
                     <Text style={styles.suggestionItem}>{item.title}</Text>
@@ -141,37 +100,7 @@ export function MyDrawer() {
               />
             )}
           </View>
-          <View style={styles.dropInfos}>
-            <DropDownPicker
-              open={openParametro}
-              value={selectedParametro}
-              items={parametros}
-              setOpen={setOpenParametro}
-              setValue={setSelectedParametro}
-              setItems={setParametros}
-              closeAfterSelecting={true}
-              placeholder="Parâmetro"
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainer}
-              zIndex={1000}
-              onChangeValue={(value) => {
-                const preDefinido = valoresPreDefinidos.find(
-                  (item) => item.label === value
-                );
-                console.log(preDefinido);
-              }}
-            />
-            <Input
-              value={
-                valoresPreDefinidos.find(
-                  (item) => item.label === selectedParametro
-                )?.value
-              }
-              clearButtonMode="always"
-              placeholder="Parâmetro"
-              style={styles.input}
-            ></Input>
-          </View>
+
           <View style={styles.opacityContainer}>
             <Text style={styles.opacityText}>
               Opacidade: {Math.round(opacity * 100)}%
@@ -184,6 +113,7 @@ export function MyDrawer() {
               step={0.01}
             />
           </View>
+
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               onPress={() => applySelection(navigation)}
@@ -198,6 +128,7 @@ export function MyDrawer() {
               <Text style={styles.buttonTextLimpar}>LIMPAR</Text>
             </TouchableOpacity>
           </View>
+
           <View style={styles.footerContainer}>
             <Image
               source={require("../assets/logoazul.png")}
@@ -221,7 +152,6 @@ export function MyDrawer() {
     </Drawer.Navigator>
   );
 }
-
 const styles = StyleSheet.create({
   drawerContent: {
     flex: 1,

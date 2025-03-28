@@ -1,71 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Image } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT, UrlTile } from "react-native-maps";
+import axios from "axios";
 
 const RAINVIEWER_API = "https://tilecache.rainviewer.com/v2/radar/";
 const TILE_FORMAT = "/256/{z}/{x}/{y}/2/1_1.png";
+const ESTACOES_API = "https://api-dcsc.mks-unifique.ddns.net/api/estacoes";
 
-const stations = [
-  {
-    id: 1,
-    title: "Blumenau",
-    description: "SDC-SC Blumenau.",
-    latitude: -26.922445,
-    longitude: -49.13543,
-  },
-  {
-    id: 2,
-    title: "Gaspar",
-    description: "SDC-SC Gaspar",
-    latitude: -26.926407,
-    longitude: -48.964283,
-  },
-  {
-    id: 3,
-    title: "Ilhota",
-    description: "SDC-SC Ilhota",
-    latitude: -26.894432,
-    longitude: -48.82478,
-  },
-  {
-    id: 4,
-    title: "Brusque",
-    description: "SDC-SC Brusque",
-    latitude: -27.100677,
-    longitude: -48.917225,
-  },
-  {
-    id: 5,
-    title: "Ascurra",
-    description: "SDC- SC Ascurra",
-    latitude: -26.961292,
-    longitude: -49.372902,
-  },
-  {
-    id: 6,
-    title: "Rio do Campo",
-    description: "SDC-SC Rio do Campo",
-    latitude: -26.895851,
-    longitude: -50.15508,
-  },
-  {
-    id: 7,
-    title: "Itaiópolis",
-    description: "SDC-SC Itaiópolis",
-    latitude: -26.571453,
-    longitude: -49.822426,
-  },
-];
+interface Station {
+  id: string;
+  nome: string;
+  description: string;
+  latitude: number;
+  longitude: number;
+}
 
 export default function HomeScreen({ route }) {
   const { selectedStation, opacity } = route.params || {};
+
   const [region, setRegion] = useState({
     latitude: -27.2423,
     longitude: -50.2189,
     latitudeDelta: 3.5,
     longitudeDelta: 3.5,
   });
-  const [rainLayer, setRainLayer] = useState(null);
+
+  const [rainLayer, setRainLayer] = useState<string | null>(null);
+  const [stations, setStations] = useState<Station[]>([]);
 
   useEffect(() => {
     if (selectedStation) {
@@ -94,6 +55,32 @@ export default function HomeScreen({ route }) {
     fetchRainViewer();
   }, []);
 
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const response = await axios.get(ESTACOES_API);
+        const stationsData = response.data.data; // Pegando os dados corretamente
+
+        // Convertendo o objeto de estações em um array
+        const stationsArray: Station[] = Object.keys(stationsData).map(
+          (key) => ({
+            id: key, // Usando a chave como ID
+            nome: stationsData[key].nome,
+            latitude: stationsData[key].latitude,
+            longitude: stationsData[key].longitude,
+            description: stationsData[key].rio || "Sem descrição",
+          })
+        );
+
+        setStations(stationsArray);
+      } catch (error) {
+        console.error("Erro ao buscar estações:", error);
+        setStations([]);
+      }
+    };
+    fetchStations();
+  }, []);
+
   return (
     <View style={styles.container}>
       <MapView
@@ -109,7 +96,7 @@ export default function HomeScreen({ route }) {
               latitude: station.latitude,
               longitude: station.longitude,
             }}
-            title={station.title}
+            title={station.nome}
             description={station.description}
           >
             <Image
@@ -119,6 +106,7 @@ export default function HomeScreen({ route }) {
             />
           </Marker>
         ))}
+
         {rainLayer && (
           <UrlTile
             urlTemplate={rainLayer}
