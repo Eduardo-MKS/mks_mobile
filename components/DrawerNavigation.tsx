@@ -14,6 +14,7 @@ import HomeScreen from "../screens/HomeScreen";
 import Slider from "@react-native-community/slider";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+
 import DropDownPicker from "react-native-dropdown-picker";
 
 const Drawer = createDrawerNavigator();
@@ -31,6 +32,7 @@ export function MyDrawer() {
   const [selectedTipos, setSelectedTipos] = useState(null);
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [isOpenRadar, setIsOpenRadar] = useState(false);
+  const [isOpenSatelite, setIsOpenSatelite] = useState(false);
   const searchInputRef = useRef(null);
 
   const [valoresPreDefinidos, setValoresPreDefinidos] = useState([
@@ -117,6 +119,10 @@ export function MyDrawer() {
     setIsOpenRadar(!isOpenRadar);
   };
 
+  const toggleOpenSatelite = () => {
+    setIsOpenSatelite(!isOpenSatelite);
+  };
+
   return (
     <Drawer.Navigator
       id={"my-drawer"}
@@ -195,7 +201,6 @@ export function MyDrawer() {
                   setItems={setTipos}
                   closeAfterSelecting={true}
                   placeholder="Tipos"
-                  style={styles.dropdownTipos}
                   zIndex={1000}
                 />
               </View>
@@ -228,6 +233,27 @@ export function MyDrawer() {
                   maximumValue={1}
                   step={0.01}
                 />
+              </View>
+            )}
+          </View>
+
+          <View style={styles.rainContainer}>
+            <TouchableOpacity
+              style={styles.radarHeader}
+              onPress={toggleOpenSatelite}
+            >
+              <Icon
+                name="satellite-uplink"
+                size={20}
+                color="#DDA853"
+                style={styles.radarIcon}
+              />
+              <Text style={styles.radarTitle}>Satelite</Text>
+            </TouchableOpacity>
+
+            {isOpenSatelite && (
+              <View style={styles.opacityContainer}>
+                <Text style={styles.opacityText}>Satelite em Andamento...</Text>
               </View>
             )}
           </View>
