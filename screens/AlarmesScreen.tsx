@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   tableContainer: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#183B4E",
+    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
   },
   tableHeader: {
-    backgroundColor: "#183B4E",
+    backgroundColor: "#fff",
   },
   tableHeaderTitle: {
     fontStyle: "italic",

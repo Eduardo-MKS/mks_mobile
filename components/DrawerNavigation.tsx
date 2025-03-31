@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#fff",
+    color: "#fff",
   },
   opacityContainer: {
     marginBottom: 20,
@@ -209,7 +210,7 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     borderColor: "#000",
-    color: "#000",
+    color: "#fff",
     fontStyle: "italic",
     borderRadius: 5,
     padding: 10,
