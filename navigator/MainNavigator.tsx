@@ -13,6 +13,7 @@ export default function MainNavigator() {
   return (
     <NavigationContainer>
       <Tab.Navigator
+        // @ts-ignore
         id="main-tab-navigator"
         screenOptions={({ route }) => ({
           headerStyle: { backgroundColor: "#fff" },

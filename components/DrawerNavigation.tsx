@@ -125,6 +125,7 @@ export function MyDrawer() {
 
   return (
     <Drawer.Navigator
+      // @ts-ignore
       id={"my-drawer"}
       drawerContent={({ navigation }) => (
         <View style={styles.drawerContent}>
