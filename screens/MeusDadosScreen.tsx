@@ -9,12 +9,6 @@ export default function MeusDadosScreen() {
       email: "eduardo@mkssistemas.com.br",
       telefone: "47 99999-9999",
     },
-    {
-      id: 2,
-      nome: "John Doe",
-      email: "teste@gmail.com",
-      telefone: "47 99999-9999",
-    },
   ];
 
   const usuarioId1 = usuarios.find((usuario) => usuario.id === 1);
@@ -26,6 +20,9 @@ export default function MeusDadosScreen() {
           source={require("../assets/person.png")}
           style={styles.profilePhoto}
         />
+        <TouchableOpacity style={styles.loadButton}>
+          <Text style={styles.loadButtonText}>Carregar Foto</Text>
+        </TouchableOpacity>
       </View>
       <View style={styles.hr} />
       <View style={styles.infoContainer}>
@@ -129,6 +126,18 @@ const styles = StyleSheet.create({
   },
   buttonTextSair: {
     color: "#133E87",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
+  loadButton: {
+    backgroundColor: "#133E87",
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 10,
+    alignItems: "center",
+  },
+  loadButtonText: {
+    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
   },
