@@ -307,7 +307,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 16,
     justifyContent: "center",
-    backgroundColor: "#143D60",
+    backgroundColor: "#000",
   },
 
   contentContainer: {
@@ -325,12 +325,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     marginBottom: 20,
     color: "#fff",
-    backgroundColor: "#143D60",
+    backgroundColor: "#000",
   },
 
   searchInput: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#fff",
     borderRadius: 5,
     marginBottom: 10,
     color: "#fff",
@@ -360,7 +360,7 @@ const styles = StyleSheet.create({
 
   infoContainer: {
     padding: 10,
-    backgroundColor: "#ccc",
+    backgroundColor: "#fff",
     borderRadius: 5,
     margin: 10,
   },
@@ -369,13 +369,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#ccc",
+    backgroundColor: "#fff",
     borderRadius: 5,
   },
 
   rainContainer: {
     padding: 10,
-    backgroundColor: "#ccc",
+    backgroundColor: "#fff",
     borderRadius: 5,
     margin: 10,
   },
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 10,
-    backgroundColor: "#ccc",
+    backgroundColor: "#fff",
     borderRadius: 5,
   },
 
