@@ -289,9 +289,13 @@ export function MyDrawer() {
         component={HomeScreen}
         initialParams={{ selectedStation: null, opacity: 1 }}
         options={{
-          headerBackground: () => (
-            <View style={{ backgroundColor: "#143D60" }} />
-          ),
+          headerBackground: () => <View style={styles.drawerHeader} />,
+          headerTintColor: "#DDA853", // Cor do texto do título
+          headerTitleStyle: {
+            color: "#fff", // Cor do texto do título
+            fontSize: 20,
+            fontWeight: "bold",
+          },
         }}
       />
     </Drawer.Navigator>
@@ -347,6 +351,11 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#fff",
+  },
+
+  drawerHeader: {
+    backgroundColor: "#000",
+    height: "100%",
   },
 
   infoContainer: {

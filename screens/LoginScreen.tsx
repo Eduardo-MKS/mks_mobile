@@ -70,6 +70,14 @@ export default function LoginScreen({ onLoginSuccess }) {
         <Text style={styles.forgotPasswordText}>Esqueceu a senha?</Text>
       </TouchableOpacity>
 
+      <TouchableOpacity
+        onPress={() =>
+          Alert.alert("Cadastrar usuário", "Função em desenvolvimento...")
+        }
+      >
+        <Text style={styles.cadastrarUsua}>Cadastre-Se</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.buttonLogin} onPress={handleLogin}>
         <Text style={styles.buttonText}>Entrar</Text>
       </TouchableOpacity>
@@ -151,5 +159,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 8,
     marginHorizontal: 10,
+  },
+  cadastrarUsua: {
+    color: "#608BC1",
+    marginTop: 5,
+    textDecorationLine: "underline",
   },
 });

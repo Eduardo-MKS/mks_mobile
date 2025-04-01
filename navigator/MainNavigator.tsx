@@ -16,11 +16,11 @@ export default function MainNavigator() {
         // @ts-ignore
         id="main-tab-navigator"
         screenOptions={({ route }) => ({
-          headerStyle: { backgroundColor: "#fff" },
-          headerTintColor: "#000",
-          tabBarStyle: { backgroundColor: "#fff" },
-          tabBarActiveTintColor: "#27548A",
-          tabBarInactiveTintColor: "#183B4E",
+          headerStyle: { backgroundColor: "#000" },
+          headerTintColor: "#fff",
+          tabBarStyle: { backgroundColor: "#000" },
+          tabBarActiveTintColor: "#DDA853",
+          tabBarInactiveTintColor: "#fff",
           tabBarShowLabel: false,
           tabBarIcon: ({ color, size }) => {
             let iconName;
