@@ -183,16 +183,7 @@ export function MyDrawer() {
                     console.log(preDefinido);
                   }}
                 />
-                <Input
-                  value={
-                    valoresPreDefinidos.find(
-                      (item) => item.label === selectedParametro
-                    )?.value
-                  }
-                  clearButtonMode="always"
-                  placeholder="Parâmetro"
-                  style={styles.input}
-                ></Input>
+
                 <DropDownPicker
                   open={openTipos}
                   value={selectedTipos}
@@ -203,6 +194,7 @@ export function MyDrawer() {
                   closeAfterSelecting={true}
                   placeholder="Tipos"
                   zIndex={1000}
+                  style={styles.dropDownTipe}
                 />
               </View>
             )}
@@ -356,6 +348,10 @@ const styles = StyleSheet.create({
   drawerHeader: {
     backgroundColor: "#000",
     height: "100%",
+  },
+
+  dropDownTipe: {
+    marginTop: 10,
   },
 
   infoContainer: {
