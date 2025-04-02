@@ -15,6 +15,7 @@ interface Station {
   latitude: number;
   longitude: number;
   chuvaAcumulada?: number;
+  nivelRio?: number;
 }
 
 export default function HomeScreen({ route }) {
@@ -79,7 +80,9 @@ export default function HomeScreen({ route }) {
       validData.sort((a, b) => b.timestamp - a.timestamp);
     }
 
-    return validData[0].value;
+    // Garantir que o valor não seja negativo
+    const value = validData[0].value;
+    return value >= 0 ? value : 0;
   };
 
   const calculateParameterValue = (data, parameterType) => {
@@ -124,8 +127,26 @@ export default function HomeScreen({ route }) {
       case "Chuva Deslizamento (mm)":
         return getLatestValue(data, "precipitacaoDeslizamento");
 
-      case "Rio m":
-        return getLatestValue(data, "nivelRio");
+      case "Rio m": {
+        const possibleRiverFields = [
+          "nivelRio",
+          "rio_nivel_m",
+          "nivel_rio",
+          "river_level",
+          "waterlevel",
+        ];
+
+        const riverField = possibleRiverFields.find((field) =>
+          data.some((item) => item[field] !== undefined)
+        );
+
+        if (riverField) {
+          // Garantir que não retornamos valor negativo
+          const value = getLatestValue(data, riverField);
+          return value >= 0 ? value : 0;
+        }
+        return 0;
+      }
 
       case "Temperatura":
         return getLatestValue(data, "temperatura");
@@ -143,7 +164,7 @@ export default function HomeScreen({ route }) {
       const formattedEndDate = format(endDate, "yyyy-MM-dd'T'HH:mm:ss");
 
       if (stationId === "DCSC-00042") {
-        return 0;
+        return { chuvaAcumulada: 0, nivelRio: 0 };
       }
 
       const url = `https://api-dcsc.mks-unifique.ddns.net/api/estacoes/dados?codigo=${stationId}&data_inicial=${formattedStartDate}&data_final=${formattedEndDate}`;
@@ -154,12 +175,24 @@ export default function HomeScreen({ route }) {
         response.data.dados &&
         response.data.dados.length > 0
       ) {
-        return calculateParameterValue(response.data.dados, selectedParametro);
+        // Calcula tanto dados de chuva quanto de nível do rio
+        const chuvaAcumulada = calculateParameterValue(
+          response.data.dados,
+          "Chuva Acumulada (mm)"
+        );
+
+        // Calcula nível do rio apenas se o parâmetro selecionado for "Rio m"
+        const nivelRio =
+          selectedParametro === "Rio m"
+            ? calculateParameterValue(response.data.dados, "Rio m")
+            : 0;
+
+        return { chuvaAcumulada, nivelRio };
       }
 
-      return 0;
+      return { chuvaAcumulada: 0, nivelRio: 0 };
     } catch (error) {
-      return 0;
+      return { chuvaAcumulada: 0, nivelRio: 0 };
     }
   };
 
@@ -181,10 +214,14 @@ export default function HomeScreen({ route }) {
         );
 
         const updatedStations = await Promise.all(
-          stationsArray.map(async (station) => ({
-            ...station,
-            chuvaAcumulada: await fetchStationData(station.id),
-          }))
+          stationsArray.map(async (station) => {
+            const data = await fetchStationData(station.id);
+            return {
+              ...station,
+              chuvaAcumulada: data.chuvaAcumulada,
+              nivelRio: data.nivelRio,
+            };
+          })
         );
 
         setStations(updatedStations);
@@ -230,6 +267,21 @@ export default function HomeScreen({ route }) {
     }
   };
 
+  const getCurrentParameterValue = (station, paramType) => {
+    switch (paramType) {
+      case "Chuva Acumulada (mm)":
+      case "Chuva Instantanea (mm)":
+      case "Chuva Deslizamento (mm)":
+        return station.chuvaAcumulada;
+      case "Rio m":
+        return station.nivelRio;
+      case "Temperatura":
+        return station.temperatura;
+      default:
+        return station.chuvaAcumulada;
+    }
+  };
+
   const unit = getUnitForParameter(selectedParametro);
   const paramShortName = getShortParameterName(selectedParametro);
 
@@ -241,41 +293,51 @@ export default function HomeScreen({ route }) {
         initialRegion={region}
         region={region}
       >
-        {stations.map((station) => (
-          <Marker
-            key={station.id}
-            coordinate={{
-              latitude: station.latitude,
-              longitude: station.longitude,
-            }}
-            title={station.nome}
-            description={`${station.description}\n${selectedParametro}: ${
-              station.chuvaAcumulada?.toFixed(2) || "0.00"
-            } ${unit}`}
-            anchor={{ x: 0.5, y: 0.5 }}
-          >
-            <View style={styles.markerContainer}>
-              <Image
-                source={
-                  selectedParametro.includes("Chuva") &&
-                  (station.chuvaAcumulada || 0) > 0
-                    ? require("../assets/Blue_dot.png")
-                    : require("../assets/green-dot2.png")
-                }
-                style={{ width: 25, height: 25 }}
-                resizeMode="contain"
-              />
-              {station.chuvaAcumulada !== undefined && (
-                <View style={styles.dataContainer}>
-                  <Text style={styles.dataLabel}>{paramShortName}</Text>
-                  <Text style={styles.dataValue}>
-                    {station.chuvaAcumulada?.toFixed(2) || "0.00"} {unit}
-                  </Text>
-                </View>
-              )}
-            </View>
-          </Marker>
-        ))}
+        {stations.map((station) => {
+          const currentValue = getCurrentParameterValue(
+            station,
+            selectedParametro
+          );
+          const isDotBlue =
+            (selectedParametro.includes("Chuva") &&
+              (station.chuvaAcumulada || 0) > 0) ||
+            (selectedParametro === "Rio m" && (station.nivelRio || 0) > 0);
+
+          return (
+            <Marker
+              key={station.id}
+              coordinate={{
+                latitude: station.latitude,
+                longitude: station.longitude,
+              }}
+              title={station.nome}
+              description={`${station.description}\n${selectedParametro}: ${
+                currentValue?.toFixed(2) || "0.00"
+              } ${unit}`}
+              anchor={{ x: 0.5, y: 0.5 }}
+            >
+              <View style={styles.markerContainer}>
+                <Image
+                  source={
+                    isDotBlue
+                      ? require("../assets/Blue_dot.png")
+                      : require("../assets/green-dot2.png")
+                  }
+                  style={{ width: 25, height: 25 }}
+                  resizeMode="contain"
+                />
+                {currentValue !== undefined && (
+                  <View style={styles.dataContainer}>
+                    <Text style={styles.dataLabel}>{paramShortName}</Text>
+                    <Text style={styles.dataValue}>
+                      {currentValue?.toFixed(2) || "0.00"} {unit}
+                    </Text>
+                  </View>
+                )}
+              </View>
+            </Marker>
+          );
+        })}
 
         {rainLayer && (
           <UrlTile
