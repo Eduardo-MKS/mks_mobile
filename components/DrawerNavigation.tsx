@@ -14,7 +14,7 @@ import HomeScreen from "../screens/HomeScreen";
 import Slider from "@react-native-community/slider";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-import { format, subHours } from "date-fns";
+
 import DropDownPicker from "react-native-dropdown-picker";
 
 const Drawer = createDrawerNavigator();
@@ -212,19 +212,6 @@ export function MyDrawer() {
                   placeholder="Período"
                   zIndex={2000}
                   style={styles.dropDownTime}
-                />
-
-                <DropDownPicker
-                  open={openTipos}
-                  value={selectedTipos}
-                  items={tipos}
-                  setOpen={setOpenTipos}
-                  setValue={setSelectedTipos}
-                  setItems={setTipos}
-                  closeAfterSelecting={true}
-                  placeholder="Tipos"
-                  zIndex={1000}
-                  style={styles.dropDownTipe}
                 />
               </View>
             )}
