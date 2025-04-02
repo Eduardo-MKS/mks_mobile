@@ -8,6 +8,7 @@ import {
   FlatList,
   TouchableOpacity,
   Keyboard,
+  Platform,
 } from "react-native";
 import { Input } from "react-native-elements";
 import HomeScreen from "../screens/HomeScreen";
@@ -147,25 +148,30 @@ export function MyDrawer() {
       drawerContent={({ navigation }) => (
         <View style={styles.drawerContent}>
           <View style={styles.contentContainer}>
-            <Input
-              ref={searchInputRef}
-              placeholder="Buscar Estação"
-              value={searchText}
-              onChangeText={handleSearch}
-              style={styles.searchInput}
-            />
-            {searchText.length > 0 && (
-              <FlatList
-                data={suggestions}
-                keyExtractor={(item) => item.id}
-                renderItem={({ item }) => (
-                  <TouchableOpacity onPress={() => selectStation(item)}>
-                    <Text style={styles.suggestionItem}>{item.title}</Text>
-                  </TouchableOpacity>
-                )}
-                style={styles.suggestionsList}
+            <View style={styles.searchContainer}>
+              <Input
+                ref={searchInputRef}
+                placeholder="Buscar Estação"
+                value={searchText}
+                onChangeText={handleSearch}
+                style={styles.searchInput}
               />
-            )}
+              {searchText.length > 0 && (
+                <View style={styles.suggestionsContainer}>
+                  <FlatList
+                    data={suggestions}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({ item }) => (
+                      <TouchableOpacity onPress={() => selectStation(item)}>
+                        <Text style={styles.suggestionItem}>{item.title}</Text>
+                      </TouchableOpacity>
+                    )}
+                    style={styles.suggestionsList}
+                    keyboardShouldPersistTaps="handled"
+                  />
+                </View>
+              )}
+            </View>
           </View>
 
           <View style={styles.infoContainer}>
@@ -342,6 +348,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
   },
 
+  searchContainer: {
+    position: "relative",
+    zIndex: 5000,
+  },
+
+  suggestionsContainer: {
+    position: "absolute",
+    top: 50,
+    left: 0,
+    right: 0,
+    zIndex: 5000,
+  },
+
   searchInput: {
     borderWidth: 1,
     borderColor: "#fff",
@@ -492,5 +511,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 5,
     marginTop: 5,
+    borderWidth: 1,
+    borderColor: "#ddd",
   },
 });
