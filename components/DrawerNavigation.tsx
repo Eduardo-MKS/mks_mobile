@@ -14,7 +14,7 @@ import HomeScreen from "../screens/HomeScreen";
 import Slider from "@react-native-community/slider";
 import axios from "axios";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-
+import { format, subHours } from "date-fns";
 import DropDownPicker from "react-native-dropdown-picker";
 
 const Drawer = createDrawerNavigator();
@@ -33,6 +33,7 @@ export function MyDrawer() {
   const [isOpenInfo, setIsOpenInfo] = useState(false);
   const [isOpenRadar, setIsOpenRadar] = useState(false);
   const [isOpenSatelite, setIsOpenSatelite] = useState(false);
+  const [timeRange, setTimeRange] = useState(168); // Default 168 hours (7 days)
   const searchInputRef = useRef(null);
 
   const [valoresPreDefinidos, setValoresPreDefinidos] = useState([
@@ -57,6 +58,16 @@ export function MyDrawer() {
     { label: "Rio m", value: "Rio m" },
     { label: "Temperatura", value: "Temperatura" },
   ]);
+
+  const [periodos, setPeriodos] = useState([
+    { label: "Últimas 24 horas", value: 24 },
+    { label: "Últimas 48 horas", value: 48 },
+    { label: "Últimos 3 dias", value: 72 },
+    { label: "Últimos 5 dias", value: 120 },
+    { label: "Últimos 7 dias", value: 168 },
+  ]);
+  const [openPeriodos, setOpenPeriodos] = useState(false);
+  const [selectedPeriodo, setSelectedPeriodo] = useState(168);
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -97,7 +108,12 @@ export function MyDrawer() {
   };
 
   const applySelection = (navigation) => {
-    navigation.navigate("HomeScreen", { selectedStation, opacity });
+    navigation.navigate("HomeScreen", {
+      selectedStation,
+      opacity,
+      timeRange: selectedPeriodo || timeRange,
+      selectedParametro: selectedParametro || "Chuva Acumulada (mm)",
+    });
   };
 
   const removeSelection = () => {
@@ -106,6 +122,7 @@ export function MyDrawer() {
     setSuggestions([]);
     setSelectedParametro(null);
     setSelectedTipos(null);
+    setSelectedPeriodo(168);
     if (searchInputRef.current) {
       searchInputRef.current.focus();
     }
@@ -182,6 +199,19 @@ export function MyDrawer() {
                     );
                     console.log(preDefinido);
                   }}
+                />
+
+                <DropDownPicker
+                  open={openPeriodos}
+                  value={selectedPeriodo}
+                  items={periodos}
+                  setOpen={setOpenPeriodos}
+                  setValue={setSelectedPeriodo}
+                  setItems={setPeriodos}
+                  closeAfterSelecting={true}
+                  placeholder="Período"
+                  zIndex={2000}
+                  style={styles.dropDownTime}
                 />
 
                 <DropDownPicker
@@ -279,12 +309,17 @@ export function MyDrawer() {
       <Drawer.Screen
         name="HomeScreen"
         component={HomeScreen}
-        initialParams={{ selectedStation: null, opacity: 1 }}
+        initialParams={{
+          selectedStation: null,
+          opacity: 1,
+          timeRange: 168,
+          selectedParametro: "Chuva Acumulada (mm)",
+        }}
         options={{
           headerBackground: () => <View style={styles.drawerHeader} />,
-          headerTintColor: "#DDA853", // Cor do texto do título
+          headerTintColor: "#DDA853",
           headerTitleStyle: {
-            color: "#fff", // Cor do texto do título
+            color: "#fff",
             fontSize: 20,
             fontWeight: "bold",
           },
@@ -343,6 +378,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#fff",
+    color: "#000",
   },
 
   drawerHeader: {
@@ -352,6 +388,11 @@ const styles = StyleSheet.create({
 
   dropDownTipe: {
     marginTop: 10,
+  },
+
+  dropDownTime: {
+    marginTop: 10,
+    marginBottom: 10,
   },
 
   infoContainer: {
