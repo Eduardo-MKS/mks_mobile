@@ -3,8 +3,8 @@ import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import MapView, { Marker, PROVIDER_DEFAULT, UrlTile } from "react-native-maps";
 import axios from "axios";
 import { format, subHours } from "date-fns";
-import { MD3Colors, ProgressBar } from "react-native-paper";
-import { Ionicons } from "@expo/vector-icons";
+import { ProgressBar } from "react-native-paper";
+
 import { Icon } from "react-native-elements";
 
 const RAINVIEWER_API = "https://tilecache.rainviewer.com/v2/radar/";
@@ -61,6 +61,7 @@ export default function HomeScreen({ route }) {
     }
   }, [selectedStation]);
 
+  // Função para buscar os frames do RainViewer
   const fetchRainViewerFrames = async () => {
     try {
       const response = await fetch(
@@ -95,6 +96,7 @@ export default function HomeScreen({ route }) {
     }
   };
 
+  // Função para acelerar a animação
   const speedUpAnimation = () => {
     if (animationSpeed > 500) {
       const newSpeed = Math.max(500, animationSpeed - 500);
@@ -544,8 +546,8 @@ export default function HomeScreen({ route }) {
         <View style={styles.progressContainer}>
           <ProgressBar
             progress={progress}
-            color={MD3Colors.error50}
             style={styles.progressBar}
+            color="#DDA853"
           />
         </View>
 
@@ -558,7 +560,7 @@ export default function HomeScreen({ route }) {
             <Icon
               name={isPlaying ? "pause-circle-outline" : "play-circle-outline"}
               size={28}
-              color={MD3Colors.error50}
+              color="#DDA853"
             />
           </TouchableOpacity>
 
@@ -682,6 +684,7 @@ const styles = StyleSheet.create({
   progressBar: {
     height: 4,
     borderRadius: 2,
+    color: "#000",
   },
   controlsContainer: {
     flexDirection: "row",
