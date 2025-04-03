@@ -8,7 +8,6 @@ import {
   FlatList,
   TouchableOpacity,
   Keyboard,
-  Platform,
 } from "react-native";
 import { Input } from "react-native-elements";
 import HomeScreen from "../screens/HomeScreen";
@@ -37,27 +36,9 @@ export function MyDrawer() {
   const [timeRange, setTimeRange] = useState(168); // Default 168 hours (7 days)
   const searchInputRef = useRef(null);
 
-  const [valoresPreDefinidos, setValoresPreDefinidos] = useState([
-    { label: "Chuva Acumulada (mm)", value: "12,5 mm" },
-    { label: "Chuva Instantanea (mm)", value: "15,5 mm" },
-    { label: "Chuva Deslizamento (mm)", value: "2,5 mm" },
-    { label: "Rio m", value: "8,2 m" },
-    { label: "Temperatura", value: "25 C°" },
-  ]);
-
-  const [tipos, setTipos] = useState([
-    { label: "5 minutos", value: "5 minutos" },
-    { label: "10 minutos", value: "10 minutos" },
-    { label: "15 minutos", value: "15 minutos" },
-    { label: "30 minutos", value: "30 minutos" },
-  ]);
-
   const [parametros, setParametros] = useState([
     { label: "Chuva Acumulada (mm)", value: "Chuva Acumulada (mm)" },
-    { label: "Chuva Instantanea (mm)", value: "Chuva Instantanea (mm)" },
-    { label: "Chuva Deslizamento (mm)", value: "Chuva Deslizamento (mm)" },
     { label: "Rio m", value: "Rio m" },
-    { label: "Temperatura", value: "Temperatura" },
   ]);
 
   const [periodos, setPeriodos] = useState([
@@ -199,12 +180,6 @@ export function MyDrawer() {
                   closeAfterSelecting={true}
                   placeholder="Parâmetro"
                   zIndex={3000}
-                  onChangeValue={(value) => {
-                    const preDefinido = valoresPreDefinidos.find(
-                      (item) => item.label === value
-                    );
-                    console.log(preDefinido);
-                  }}
                 />
 
                 <DropDownPicker
