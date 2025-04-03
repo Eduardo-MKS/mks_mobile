@@ -96,7 +96,6 @@ export default function HomeScreen({ route }) {
     }
   };
 
-  // Função para acelerar a animação
   const speedUpAnimation = () => {
     if (animationSpeed > 500) {
       const newSpeed = Math.max(500, animationSpeed - 500);
@@ -135,10 +134,8 @@ export default function HomeScreen({ route }) {
     }
   };
 
-  // Função para iniciar ou pausar a animação
   const handlePlayPause = () => {
     if (isPlaying) {
-      // Pausar a animação
       if (animationIntervalRef.current) {
         clearInterval(animationIntervalRef.current);
         animationIntervalRef.current = null;
@@ -529,13 +526,13 @@ export default function HomeScreen({ route }) {
           <Text style={styles.speedText}>{getSpeedText()}</Text>
           <View style={styles.speedButtonsContainer}>
             <TouchableOpacity
-              onPress={slowDownAnimation}
+              onPress={speedUpAnimation}
               style={styles.speedButton}
             >
               <Icon name="remove" size={14} color="white" />
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={speedUpAnimation}
+              onPress={slowDownAnimation}
               style={styles.speedButton}
             >
               <Icon name="add" size={14} color="white" />
