@@ -105,9 +105,6 @@ export function MyDrawer() {
     setSelectedParametro(null);
     setSelectedTipos(null);
     setSelectedPeriodo(168);
-    if (searchInputRef.current) {
-      searchInputRef.current.focus();
-    }
   };
 
   const toggleOpenInfo = () => {
