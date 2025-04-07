@@ -256,10 +256,6 @@ export default function HomeScreen({ route }) {
 
         return totalRain;
       }
-
-      case "Chuva Instantanea (mm)":
-        return getLatestValue(data, "precipitacaoInstantanea");
-
       case "Chuva Deslizamento (mm)":
         return getLatestValue(data, "precipitacaoDeslizamento");
 
@@ -370,7 +366,6 @@ export default function HomeScreen({ route }) {
   const getUnitForParameter = (paramType) => {
     switch (paramType) {
       case "Chuva Acumulada (mm)":
-      case "Chuva Instantanea (mm)":
       case "Chuva Deslizamento (mm)":
         return "mm";
       case "Rio m":
@@ -386,8 +381,6 @@ export default function HomeScreen({ route }) {
     switch (paramType) {
       case "Chuva Acumulada (mm)":
         return "Chuva";
-      case "Chuva Instantanea (mm)":
-        return "Inst.";
       case "Chuva Deslizamento (mm)":
         return "Desl.";
       case "Rio m":
@@ -402,7 +395,7 @@ export default function HomeScreen({ route }) {
   const getCurrentParameterValue = (station, paramType) => {
     switch (paramType) {
       case "Chuva Acumulada (mm)":
-      case "Chuva Instantanea (mm)":
+
       case "Chuva Deslizamento (mm)":
         return station.chuvaAcumulada;
       case "Rio m":
